@@ -1,11 +1,13 @@
 #include <iostream>
 
 #include "controller/SmartController.h"
+#include "devices/DeviceManager.h"
 
 using namespace std;
 
 void simulate(
     SmartController& controller,
+    DeviceManager& devices,
     float temp,
     float hum,
     uint16_t light,
@@ -24,65 +26,70 @@ void simulate(
 
     SystemState state = controller.update(data);
 
-    std::cout << "=================================\n";
+    devices.update(data, state);
 
-    std::cout << "Temp : " << temp << "\n";
-
-    std::cout << "Light: " << light << "\n";
-
-    std::cout << "Rain : " << rain << "\n";
-
-    std::cout << "Occupied : "
-              << (occupancy == OccupancyState::Occupied ? "YES" : "NO")
-              << "\n\n";
-
-    std::cout << "Weather : ";
-
-    switch(state.weather)
-    {
-        case WeatherState::Sunny:
-            std::cout << "Sunny";
-            break;
-
-        case WeatherState::Cloudy:
-            std::cout << "Cloudy";
-            break;
-
-        case WeatherState::Rainy:
-            std::cout << "Rainy";
-            break;
-
-        case WeatherState::SunnyRain:
-            cout << "Sunny Rain";
-            break;
-    }
-
-    std::cout << "\n";
-
-    std::cout << "Roof : "
-              << (state.roof == RoofState::Open ? "OPEN" : "CLOSED")
-              << "\n";
-
-    std::cout << "Mist : "
-              << (state.mist == MistState::On ? "ON" : "OFF")
-              << "\n";
+    cout << endl;
 }
 
 int main()
 {
     SmartController controller;
+    DeviceManager devices;
 
-    simulate(controller,36,60,900,0,OccupancyState::Occupied);
+    simulate(
+        controller,
+        devices,
+        36,
+        60,
+        900,
+        0,
+        OccupancyState::Occupied);
 
-    simulate(controller,28,60,900,0,OccupancyState::Occupied);
+    simulate(
+        controller,
+        devices,
+        28,
+        60,
+        900,
+        0,
+        OccupancyState::Occupied);
 
-    simulate(controller,40,60,100,900,OccupancyState::Occupied);
+    simulate(
+        controller,
+        devices,
+        40,
+        60,
+        100,
+        900,
+        OccupancyState::Occupied);
 
-    simulate(controller,26,60,100,0,OccupancyState::Occupied);
+    simulate(
+        controller,
+        devices,
+        26,
+        60,
+        100,
+        0,
+        OccupancyState::Occupied);
 
-    simulate(controller,38,60,100,0,OccupancyState::Occupied);
+    simulate(
+        controller,
+        devices,
+        38,
+        60,
+        100,
+        0,
+        OccupancyState::Occupied);
 
-    simulate(controller,36,60,900,900,OccupancyState::Occupied);
+    // ☀️ + 🌧️
+    simulate(
+        controller,
+        devices,
+        36,
+        60,
+        900,
+        900,
+        OccupancyState::Occupied);
 
     return 0;
 }
