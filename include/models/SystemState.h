@@ -1,5 +1,13 @@
 #pragma once
 
+enum class WeatherState
+{
+    Sunny,
+    Cloudy,
+    Rainy,
+    SunnyRain
+};
+
 enum class RoofState
 {
     Open,
@@ -14,6 +22,9 @@ enum class MistState
 
 struct SystemState
 {
+    WeatherState weather;
+
     RoofState roof;
+
     MistState mist;
 };
