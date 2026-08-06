@@ -24,6 +24,15 @@ Hệ thống điều hòa vi khí hậu tự động cho khu vực nghỉ chân 
 - MG996R Servo
 - 5V Mist Maker
 
+## Progress
+
+- [x] Project Architecture
+- [x] SmartController
+- [x] Simulation
+- [x] Device Layer
+- [ ] Arduino Integration
+- [ ] Dashboard
+
 ## 📂 Project Structure
 
 ```
