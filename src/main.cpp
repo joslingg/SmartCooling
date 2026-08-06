@@ -2,31 +2,23 @@
 
 #include "controller/SmartController.h"
 #include "devices/DeviceManager.h"
+#include "sensors/SensorManager.h"
 
 using namespace std;
 
 void simulate(
     SmartController& controller,
     DeviceManager& devices,
-    float temp,
-    float hum,
-    uint16_t light,
-    uint16_t rain,
-    OccupancyState occupancy)
+    SensorManager& sensorManager,
+    const SensorData& data)
 {
-    SensorData data;
+    sensorManager.setSimulationData(data);
 
-    data.temperature = temp;
-    data.humidity = hum;
+    SensorData sensorData = sensorManager.read();
 
-    data.lightLevel = light;
-    data.rainLevel = rain;
+    SystemState state = controller.update(sensorData);
 
-    data.occupancyState = occupancy;
-
-    SystemState state = controller.update(data);
-
-    devices.update(data, state);
+    devices.update(sensorData, state);
 
     cout << endl;
 }
@@ -35,61 +27,95 @@ int main()
 {
     SmartController controller;
     DeviceManager devices;
+    SensorManager sensorManager;
 
-    simulate(
-        controller,
-        devices,
-        36,
-        60,
-        900,
-        0,
-        OccupancyState::Occupied);
+    // ==========================
+    // Scenario 1 : Sunny + Hot
+    // ==========================
 
-    simulate(
-        controller,
-        devices,
-        28,
-        60,
-        900,
-        0,
-        OccupancyState::Occupied);
+    SensorData sunnyHot;
 
-    simulate(
-        controller,
-        devices,
-        40,
-        60,
-        100,
-        900,
-        OccupancyState::Occupied);
+    sunnyHot.temperature = 36;
+    sunnyHot.humidity = 60;
+    sunnyHot.lightLevel = 900;
+    sunnyHot.rainLevel = 0;
+    sunnyHot.occupancyState = OccupancyState::Occupied;
 
-    simulate(
-        controller,
-        devices,
-        26,
-        60,
-        100,
-        0,
-        OccupancyState::Occupied);
+    // ==========================
+    // Scenario 2 : Sunny + Cool
+    // ==========================
 
-    simulate(
-        controller,
-        devices,
-        38,
-        60,
-        100,
-        0,
-        OccupancyState::Occupied);
+    SensorData sunnyCool;
 
-    // ☀️ + 🌧️
-    simulate(
-        controller,
-        devices,
-        36,
-        60,
-        900,
-        900,
-        OccupancyState::Occupied);
+    sunnyCool.temperature = 28;
+    sunnyCool.humidity = 60;
+    sunnyCool.lightLevel = 900;
+    sunnyCool.rainLevel = 0;
+    sunnyCool.occupancyState = OccupancyState::Occupied;
+
+    // ==========================
+    // Scenario 3 : Rain
+    // ==========================
+
+    SensorData rainy;
+
+    rainy.temperature = 40;
+    rainy.humidity = 60;
+    rainy.lightLevel = 100;
+    rainy.rainLevel = 900;
+    rainy.occupancyState = OccupancyState::Occupied;
+
+    // ==========================
+    // Scenario 4 : Cloudy
+    // ==========================
+
+    SensorData cloudy;
+
+    cloudy.temperature = 26;
+    cloudy.humidity = 60;
+    cloudy.lightLevel = 100;
+    cloudy.rainLevel = 0;
+    cloudy.occupancyState = OccupancyState::Occupied;
+
+    // ==========================
+    // Scenario 5 : Cloudy + Hot
+    // ==========================
+
+    SensorData cloudyHot;
+
+    cloudyHot.temperature = 38;
+    cloudyHot.humidity = 60;
+    cloudyHot.lightLevel = 100;
+    cloudyHot.rainLevel = 0;
+    cloudyHot.occupancyState = OccupancyState::Occupied;
+
+    // ==========================
+    // Scenario 6 : Sunny + Rain
+    // ==========================
+
+    SensorData sunnyRain;
+
+    sunnyRain.temperature = 36;
+    sunnyRain.humidity = 60;
+    sunnyRain.lightLevel = 900;
+    sunnyRain.rainLevel = 900;
+    sunnyRain.occupancyState = OccupancyState::Occupied;
+
+    // ==========================
+    // Run Simulation
+    // ==========================
+
+    simulate(controller, devices, sensorManager, sunnyHot);
+
+    simulate(controller, devices, sensorManager, sunnyCool);
+
+    simulate(controller, devices, sensorManager, rainy);
+
+    simulate(controller, devices, sensorManager, cloudy);
+
+    simulate(controller, devices, sensorManager, cloudyHot);
+
+    simulate(controller, devices, sensorManager, sunnyRain);
 
     return 0;
 }

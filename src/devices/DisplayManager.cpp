@@ -8,32 +8,63 @@ void DisplayManager::update(
     const SensorData& data,
     const SystemState& state)
 {
-    cout << "========================\n";
+    cout << "========================" << endl;
 
-    cout << "Temp : " << data.temperature << " C\n";
+    cout << "Temp     : " << data.temperature << " C" << endl;
+    cout << "Humidity : " << data.humidity << " %" << endl;
 
-    cout << "Humidity : " << data.humidity << " %\n";
+    cout << "Weather  : " << weatherToString(state.weather) << endl;
+    cout << "Roof     : " << roofToString(state.roof) << endl;
+    cout << "Mist     : " << mistToString(state.mist) << endl;
+}
 
-    cout << "Weather : ";
-
-    switch(state.weather)
+string DisplayManager::weatherToString(WeatherState weather) const
+{
+    switch (weather)
     {
         case WeatherState::Sunny:
-            cout << "Sunny";
-            break;
+            return "Sunny";
 
         case WeatherState::Cloudy:
-            cout << "Cloudy";
-            break;
+            return "Cloudy";
 
         case WeatherState::Rainy:
-            cout << "Rainy";
-            break;
+            return "Rainy";
 
         case WeatherState::SunnyRain:
-            cout << "SunnyRain";
-            break;
-    }
+            return "Sunny Rain";
 
-    cout << endl;
+        default:
+            return "Unknown";
+    }
+}
+
+string DisplayManager::roofToString(RoofState roof) const
+{
+    switch (roof)
+    {
+        case RoofState::Open:
+            return "OPEN";
+
+        case RoofState::Closed:
+            return "CLOSED";
+
+        default:
+            return "Unknown";
+    }
+}
+
+string DisplayManager::mistToString(MistState mist) const
+{
+    switch (mist)
+    {
+        case MistState::On:
+            return "ON";
+
+        case MistState::Off:
+            return "OFF";
+
+        default:
+            return "Unknown";
+    }
 }
